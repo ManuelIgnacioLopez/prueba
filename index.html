@@ -1,33 +1,41 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>Calculadora de demanda</title>
-	<link rel="stylesheet" type="text/css" href="style.css">
-</head>
-<body>
-	<div class="container">
-		<h1>Calculadora de demanda</h1>
-		<form id="demand-form">
-			<label for="previous-price">Precio anterior:</label>
-			<input type="number" id="previous-price" name="previous-price" required>
-			<br>
-			<label for="previous-demand">Demanda anterior:</label>
-			<input type="number" id="previous-demand" name="previous-demand" required>
-			<br>
-			<label for="price">Precio:</label>
-			<input type="number" id="price" name="price" required>
-			<br>
-			<label for="conversion-rate">Tasa de conversión:</label>
-			<input type="number" id="conversion-rate" name="conversion-rate" required>
-			<br>
-			<label for="market-factor">Factor de mercado:</label>
-			<input type="number" id="market-factor" name="market-factor" min="0" max="2" step="0.01" required>
-			<br><br>
-			<button type="submit">Calcular demanda</button>
-		</form>
-		<div id="demand-results"></div>
-	</div>
-	<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.7.0"></script>
-	<script src="script.js"></script>
-</body>
-</html>
+  <head>
+    <title>Calculadora de Demanda</title>
+    <style>
+      /* Estilos CSS */
+      body {
+        font-family: Arial, sans-serif;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        width: 300px;
+      }
+
+      label {
+        margin-bottom: 0.5rem;
+      }
+
+      input {
+        margin-bottom: 1rem;
+        padding: 0.5rem;
+        border-radius: 0.25rem;
+        border: 1px solid #ccc;
+      }
+
+      button {
+        padding: 0.5rem 1rem;
+        border-radius: 0.25rem;
+        background-color: #008CBA;
+        color: white;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+      }
+
+      #demand-results {
+        margin-top: 1rem;
+      }
+    </
