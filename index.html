@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Calculadora de demanda</title>
+  </head>
+  <body>
+    <form id="demand-form">
+      <label for="previous-month-sales">Ventas del mes anterior:</label>
+      <input type="number" id="previous-month-sales" name="previous-month-sales" required>
+      <br>
+      <label for="conversion-rate">Tasa de conversión:</label>
+      <input type="number" step="0.01" id="conversion-rate" name="conversion-rate" required>
+      <br>
+      <label for="market-factor">Factor de mercado:</label>
+      <input type="number" step="0.1" id="market-factor" name="market-factor" min="0" max="2" required>
+      <br><br>
+      <button type="submit">Calcular demanda</button>
+    </form>
+
+    <div id="demand-results"></div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
