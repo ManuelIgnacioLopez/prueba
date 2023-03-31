@@ -1,41 +1,79 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8">
     <title>Calculadora de Demanda</title>
     <style>
-      /* Estilos CSS */
-      body {
-        font-family: Arial, sans-serif;
-      }
-
       form {
         display: flex;
         flex-direction: column;
-        width: 300px;
+        margin-bottom: 20px;
       }
-
       label {
-        margin-bottom: 0.5rem;
+        margin-bottom: 5px;
+      }
+      input[type="number"] {
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Calculadora de Demanda</h1>
+    <form id="demand-form">
+      <label for="previous-demand">Demanda del mes anterior</label>
+      <input type="number" id="previous-demand" name="previous-demand" required>
+      <label for="previous-price">Precio del mes anterior</label>
+      <input type="number" id="previous-price" name="previous-price" required>
+      <label for="price">Precio actual</label>
+      <input type="number" id="price" name="price" required>
+      <label for="conversion-rate">Tasa de conversión</label>
+      <input type="number" id="conversion-rate" name="conversion-rate" required>
+      <button type="submit">Calcular</button>
+    </form>
+    <div id="demand-results"></div>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.9.0"></script>
+    <script>
+      // Cargar el modelo de machine learning
+      async function loadModel() {
+        const model = await tf.loadLayersModel('http://localhost:8000/model.json');
+        return model;
       }
 
-      input {
-        margin-bottom: 1rem;
-        padding: 0.5rem;
-        border-radius: 0.25rem;
-        border: 1px solid #ccc;
+      // Función para predecir la demanda
+      async function predictDemand(model, previousDemand, previousPrice, price, conversionRate) {
+        // Convertir los valores a tensores de TensorFlow
+        const inputs = tf.tensor2d([[previousDemand, previousPrice, price, conversionRate]]);
+        
+        // Normalizar los valores de entrada
+        const inputMax = tf.tensor2d([[1.0, 1.0, 200.0, 1.0]]);
+        const inputMin = tf.tensor2d([[0.0, 0.0, 0.0, 0.0]]);
+        const normalizedInputs = inputs.sub(inputMin).div(inputMax.sub(inputMin));
+
+        // Predecir la demanda normalizada
+        const normalizedOutput = model.predict(normalizedInputs);
+        
+        // Desnormalizar la demanda
+        const outputMax = tf.tensor2d([[100.0]]);
+        const outputMin = tf.tensor2d([[0.0]]);
+        const output = normalizedOutput.mul(outputMax.sub(outputMin)).add(outputMin);
+        
+        // Obtener la demanda como un número
+        const demand = output.dataSync()[0];
+
+        return demand;
       }
 
-      button {
-        padding: 0.5rem 1rem;
-        border-radius: 0.25rem;
-        background-color: #008CBA;
-        color: white;
-        font-weight: bold;
-        border: none;
-        cursor: pointer;
-      }
+      // Manejador de eventos para el envío del formulario
+      async function handleFormSubmit(event) {
+        event.preventDefault();
 
-      #demand-results {
-        margin-top: 1rem;
-      }
-    </
+        const previousDemand = Number(document.getElementById('previous-demand').value);
+        const previousPrice = Number(document.getElementById('previous-price').value);
+        const price = Number(document.getElementById('price').value);
+        const conversionRate = Number(document.getElementById('conversion-rate').value);
+
+        const model = await loadModel();
+        const demand = await predictDemand(model, previousDemand, previousPrice, price, conversionRate);
+
+        document.getElementById('demand-results').innerHTML = `La demanda esperada es: ${demand.toFixed(2)}`;
+        document
