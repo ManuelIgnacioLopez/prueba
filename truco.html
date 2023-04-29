@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Truco Argentino - Multijugador local</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			text-align: center;
+		}
+
+		.card {
+			display: inline-block;
+			width: 100px;
+			height: 150px;
+			background-color: white;
+			border: 1px solid black;
+			border-radius: 5px;
+			margin: 10px;
+			line-height: 150px;
+			font-size: 60px;
+			color: black;
+		}
+
+		.back {
+			background-image: url('back.jpg');
+			background-size: contain;
+			background-repeat: no-repeat;
+			background-position: center;
+		}
+
+		.player {
+			display: inline-block;
+			vertical-align: top;
+			width: 300px;
+			margin-top: 50px;
+		}
+
+		.score {
+			font-size: 40px;
+			margin-bottom: 10px;
+		}
+
+		.name {
+			font-size: 30px;
+			margin-bottom: 10px;
+		}
+
+		.hand {
+			margin-bottom: 20px;
+		}
+
+		.button {
+			display: inline-block;
+			padding: 10px;
+			border-radius: 5px;
+			background-color: #333;
+			color: white;
+			font-size: 20px;
+			cursor: pointer;
+			margin-bottom: 10px;
+		}
+
+		#board {
+			margin-top: 50px;
+			font-size: 0;
+		}
+	</style>
+</head>
+<body>
+	<h1>Truco Argentino - Multijugador local</h1>
+	<div class="player">
+		<div class="score" id="player1-score"></div>
+		<div class="name" id="player1-name"></div>
+		<div class="hand" id="player1-hand"></div>
+		<button class="button" id="play1">Jugar</button>
+	</div>
+	<div class="player">
+		<div class="score" id="player2-score"></div>
+		<div class="name" id="player2-name"></div>
+		<div class="hand" id="player2-hand"></div>
+		<button class="button" id="play2">Jugar</button>
+	</div>
+	<div id="board"></div>
+	<div id="message"></div>
+
+	<script>
+		// Definir jugadores
+		var player1 = {
+			name: "Jugador 1",
+			hand: [],
+			score: 0
+		};
+		var player2 = {
+			name: "Jugador 2",
+			hand: [],
+			score: 0
+		};
+
+		// Definir tablero
+		var board = {
+			cards: [],
+			currentPlayer: null,
+			opponent: null
+		};
+
+		// Definir variables de juego
+		var playing = false;
+
+		function startGame() {
+			// Inicializar juego
+			playing = true;
+			board.cards = [];
+			board.currentPlayer = player1;
+			board.opponent = player2;
+			player1.hand = [];
+			player2.hand = [];
+
+			// Crear mazo
+			var cards = [];
+			for (var i = 1; i <= 12; i++) {
+				for (var j = 1; j <= 4; j++) {
