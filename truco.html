@@ -1,32 +1,136 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-	<title>Truco Argentino</title>
-	<link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de Truco</title>
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .player {
+        display: flex;
+        justify-content: center;
+    }
+
+    .player1 {
+        visibility: visible;
+    }
+
+    .player2 {
+        visibility: visible;
+    }
+
+    .carta {
+        border: 1px solid black;
+        padding: 10px;
+        margin: 5px;
+        cursor: pointer;
+    }
+
+    button {
+        margin-top: 20px;
+    }
+
+    .puntos {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        font-weight: bold;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .puntos .jugador {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+</style>
+
 </head>
 <body>
-	<div id="game">
-		<div id="player1">
-			<h2>Jugador 1</h2>
-			<div class="card">Carta 1</div>
-			<div class="card">Carta 2</div>
-			<div class="card">Carta 3</div>
-			<button id="play1">Jugar</button>
-		</div>
-		<div id="player2">
-			<h2>Jugador 2</h2>
-			<div class="card">Carta 1</div>
-			<div class="card">Carta 2</div>
-			<div class="card">Carta 3</div>
-			<button id="play2" disabled>Jugar</button>
-		</div>
-		<div id="board">
-			<h2>Mesa</h2>
-			<div id="cards"></div>
-			<p id="message"></p>
-		</div>
-	</div>
+    <div class="container">
+        <div class="player player1">
+            <!-- Cartas del jugador 1 -->
+        </div>
+        <div class="player player2">
+            <!-- Cartas del jugador 2 -->
+        </div>
+        <button onclick="iniciarJuego()">Iniciar juego</button>
+        <div class="puntos">
+            <div class="jugador">
+                <span>Jugador 1</span>
+                <span class="puntos1">0</span>
+            </div>
+            <div class="jugador">
+                <span>Jugador 2</span>
+                <span class="puntos2">0</span>
+            </div>
+        </div>
+    </div>
+    <script>
+		class Carta {
+   		 constructor(palo, numero) {
+      		  this.palo = palo;
+       		 this.numero = numero;
+   				 }		
+				}
 
-	<script src="app.js"></script>
+		function crearBaraja() {
+  		  const palos = ['espadas', 'bastos', 'copas', 'oros'];
+ 		   const baraja = [];
+
+ 		   for (const palo of palos) {
+   		     for (let numero = 1; numero <= 12; numero++) {
+     		       if (numero === 8 || numero === 9) continue;
+     		       baraja.push(new Carta(palo, numero));
+     		   }
+  		  }
+
+			    return baraja;
+			}
+
+			function barajar(baraja) {
+			    for (let i = baraja.length - 1; i > 0; i--) {
+			        const j = Math.floor(Math.random() * (i + 1));
+			        [baraja[i], baraja[j]] = [baraja[j], baraja[i]];
+			    }
+			}
+
+			function repartirCartas(baraja) {
+			    return [baraja.slice(0, 3), baraja.slice(3, 6)];
+			}
+
+			function mostrarCartas(jugador, cartas) {
+ 			   const cartasElement = document.querySelector(`.player${jugador}`);
+ 			   cartasElement.innerHTML = '';
+		
+ 			   for (const carta of cartas) {
+    			    const cartaElement = document.createElement('div');
+    			    cartaElement.classList.add('carta');
+     			   cartaElement.textContent = `${carta.numero} de ${carta.palo}`;
+     			   cartasElement.appendChild(cartaElement);
+   				 }
+				}
+
+			function iniciarJuego() {
+  			  const baraja = crearBaraja();
+  			  barajar(baraja);
+   			 const [mano1, mano2] = repartirCartas(baraja);
+
+ 			   mostrarCartas(1, mano1);
+ 				   mostrarCartas(2, mano2);
+				}
+
+	</script>
+
 </body>
 </html>
